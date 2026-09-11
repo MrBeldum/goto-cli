@@ -43,7 +43,6 @@ func saveStore(store Store) error {
 	return os.WriteFile(getConfigPath(), data, 0644)
 }
 
-
 // sortedDirectoryNames returns bookmark names in lexicographic order so
 // `list` output is stable across runs (map iteration order is randomized).
 func sortedDirectoryNames(dirs map[string]string) []string {
