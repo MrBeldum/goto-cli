@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -40,6 +41,18 @@ func saveStore(store Store) error {
 		return err
 	}
 	return os.WriteFile(getConfigPath(), data, 0644)
+}
+
+
+// sortedDirectoryNames returns bookmark names in lexicographic order so
+// `list` output is stable across runs (map iteration order is randomized).
+func sortedDirectoryNames(dirs map[string]string) []string {
+	names := make([]string, 0, len(dirs))
+	for name := range dirs {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	return names
 }
 
 func main() {
@@ -97,8 +110,8 @@ func main() {
 				fmt.Println("No directories saved.")
 				return
 			}
-			for name, path := range store.Directories {
-				fmt.Printf("  %s -> %s\n", name, path)
+			for _, name := range sortedDirectoryNames(store.Directories) {
+				fmt.Printf("  %s -> %s\n", name, store.Directories[name])
 			}
 
 		case "jump":
